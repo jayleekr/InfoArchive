@@ -1,0 +1,102 @@
+# Author : Jay Lee 2020-05-08
+# email : jaewon.lee@hyundai-autron.com
+
+DESCRIPTION = "mobilgene Adaptive SDK"
+LICENSE = "CLOSED"
+inherit cmake externalsrc 
+
+# Public Variables
+PR = "r0"
+
+SRC_URI = "file:///adar/projects/"
+S = "${WORKDIR}/adar/projects"
+
+# 2020-06-02 Disable remove-libtool which is a post function to the do_install to remove all .la files
+REMOVE_LIBTOOL_LA = "0"
+
+# Private Variables
+_sysrootdir = "${WORKDIR}/recipe-sysroot"
+_installdir = "${_sysrootdir}/adar/install/"
+_sdkdir = "${D}/adar/install"
+BB_LIMITEDDEPS = "False"
+
+# 2020-06-02  Generate only one type of package  --> This might be changed for the future I guess 
+PACKAGES = "${PN}"
+SDKPREFIX = "/adar/install/"
+FILES_${PN} += "/adar/install"
+
+# Variables to make toolchain.cmake via do_generate_toolchain_file()
+OECMAKE_C_COMPILER = "${WORKDIR}/recipe-sysroot-native/usr/bin/aarch64-fsl-linux/aarch64-fsl-linux-gcc"
+OECMAKE_CXX_COMPILER = "${WORKDIR}/recipe-sysroot-native/usr/bin/aarch64-fsl-linux/aarch64-fsl-linux-g++"
+OECMAKE_AR = "${WORKDIR}/recipe-sysroot-native/usr/bin/aarch64-fsl-linux/aarch64-fsl-linux-ar"
+includedir += " /usr/include "
+libdir += " /lib "
+
+
+# Variables for do_configure()
+CFLAGS += " -std=gnu99 -DLinux -I/adar/install/include -L/adar/install/lib"
+CXXFLAGS += " -Wno-error=format-security -Wno-error=deprecated-copy -DLinux -I/adar/install/include -L/adar/install/lib "
+PYTHON = "/usr/bin/python3.6"
+EXTRA_OECMAKE = "-DPYTHON_EXECUTABLE=${PYTHON}"
+
+do_fetch[noexec] = "1"
+
+do_configure() {
+    sudo rm -rf ${B}/*
+    sudo cmake -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=/adar/install/ ${S}
+
+    sed -i '/TEST/d' ${B}/.config
+    sed -i '/TEST/d' ${B}/config.h
+
+    sudo chown -R jayleekr ${B}
+    if [ -ne ${WORKDIR}/install]; then
+        mkdir ${WORKDIR}/install
+    fi
+}
+
+do_clean() {
+    sudo rm -rf ${WORKDIR}/*
+}
+
+do_install() {
+    install -d ${_sdkdir}
+    cp -rf ${_installdir}/* ${_sdkdir}
+}
+
+.. PRJ_RADAR_FUSION
+... PRJ_ARA_REST
+... PRJ_ARA_NM
+... PRJ_ARA_TSYNC
+... PRJ_ARA_EXEC_EXECUTION_MANAGER
+... PRJ_ARA_COM
+... PRJ_ARA_ARXMLS
+... PRJ_ARA_IAM_INTERFACE
+... PRJ_ARA_PER
+... PRJ_PERSISTENCYKVSDEMO
+... PRJ_E2E_LIBE2EXF
+... PRJ_ARA_CORE
+... PRJ_POCO
+... PRJ_ARA_CRYPTO
+... PRJ_RAPIDJSON
+... PRJ_ARA_EXEC_WRAPPER
+... PRJ_LOCALIPC
+... PRJ_ARA_PHM_HM
+... PRJ_ARA_TOOLS_GENERATOR_AUTRON
+... PRJ_E2E_LIBE2E
+... PRJ_ARA_TOOLS_GENERATOR
+... PRJ_WRDLT
+... PRJ_ARA_APD_CMAKE_MODULES
+... PRJ_DDS_RTI
+... PRJ_ARA_IAM_MANAGER
+... PRJ_TSYNCD
+... PRJ_ADAR_GPTP
+... PRJ_ARA_APD_RNG
+... PRJ_ARA_WRS_ADAR_TEST_RUN
+... PRJ_HASOMEIP
+... PRJ_ARA_EXEC_API
+... PRJ_ARA_APD_THREADS
+... PRJ_PERSISTENCYFILESTORAGEDEMO
+... PRJ_ARA_LOG
+... PRJ_E2E_LIBCRC
+... PRJ_ARA_APD_LIBPLATFORM
+... PRJ_ARA_APD_ADAPTIVECONFIG
