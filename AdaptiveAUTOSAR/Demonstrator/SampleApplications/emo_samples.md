@@ -7,9 +7,3 @@ The example is instantiating 4 applications (TestAppl1 to TestAppl4) that shows 
 /etc/system/machine_manifest.json
 
 ![](machine.gif)
-
-## Test application 1
-![](1.gif)
-
-## Test application 2
-![](2.gif)

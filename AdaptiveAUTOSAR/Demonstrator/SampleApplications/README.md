@@ -1,6 +1,6 @@
 |Author  |Jay Lee|
 |:-------|:------|
-E-mail   |jaewon.lee@hyundai-autron.com
+E-mail   |jayleekr0125@gmail.com
 Last-Edit|2020-04-13
 
 #Sample Applications
@@ -40,5 +40,3 @@ TestApp1 ~ 4 번의 Start/Terminate로 구성됩니다.
 1. StateClient를 통하여 EM에게 Machine State를 가져 옵니다
 2. Application 시작 후 ExecutionClient를 통하여 EM에게 Application의 Execution의 State를 'Running' 보고(Report)합니다
 3. Application 종료 전 ExecutionClient를 통하여 EM에게 Application의 Execution State를 Teminating으로 보고합니다
-
-## per_samples
