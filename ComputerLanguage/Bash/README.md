@@ -52,6 +52,28 @@ a
 c
 ```
 
+### 2.6 sed
+sed Utility를 사용안해본사람은 있어도 한번만
+```sh 
+sed 
+```
+
+### 2.7 while
+
+필자는 while보다는 for문을 더 좋아하는 스타일이라 잘 쓰진않지만,
+텍스트 파일로 부터 line 을 읽어들여 작업하는 용도로 좀 쓴다.
+
+```sh
+$ while read line; do git rm -r $line; done < remove.lst
+```
+
+## 3. Useful technics
+## 3.1 Get Ip Address
+``` sh
+$ IPADDR=$(ifconfig eth0|grep inet|head -1|sed 's/\:/ /'|awk '{print $2}')
+$ echo $IPADDR
+172.17.0.3
+```
 ## Apendix. References
 
 General : http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html

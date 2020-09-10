@@ -140,6 +140,15 @@ e.g. SRC_URI_append += " file://0001-some-patch.patch"
 #### 1.4.2 do_unpack
 #### 1.4.3 do_prepare_recipe_sysroot
 #### 1.4.4 do_patch
+git 이나 svn 과 같이 history 가 관리되는 source의 경우는 패치적용이 가능하다.
+*.patch 파일들이 SRC_URI에 있을시 do_patch 과정에서 patch를 적용한다.
+git 의 경우에 patch 파일을 생성하는 방법은 아래와 같다.
+``` sh
+$ cd <workdir>/build/tmp/work-shared/<target-machine>/kernel-source/init
+$ git add Kconfig # after a modification
+$ git commit -s -m "some user patch in kernel"
+$ git format-patch -1
+```
 #### 1.4.5. do_generate_toolchain_file
 #### 1.4.6. do_configure
 #### 1.4.7 do_compile

@@ -6,3 +6,5 @@ echo ${lists[0]}
 echo ${lists[3]}
 echo ${lists[-1]}
 
+selected=${lists[-1]}
+echo $selected
