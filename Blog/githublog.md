@@ -38,12 +38,42 @@ Jekyll 을 이용하여 사이트를 생성하는 방식은 크게 두가지이�
 > (필자는 2번 방식으로 Fork 해와서 기본적인 것들만 사용하다가, 
 몇가지 애로사항으로 인하여 결국 2번방식으로 땡겨온 저장소를 Local에서 Debug 해가며 진행해야 했어서 1,2번 둘다 사용하고 있다)
 
-## Set Jekyll-theme
+### Install miscellaneous 
 
-Jekyll은 Theme 형태로 여러가지 Template을 제공한다. [http://jekyllthemes.org/]
+참조 : https://poiemaweb.com/jekyll-basics
 
+### 특정 theme 설치
+필자는 jekyll-theme-chirpy 라는 jekyll 테마를 설치할 예정이다.
+이를 위해서는 jekyll installer 가 읽어드리는 설정파일들이 필요한데, 이러한 과정들이 번거로워 아예 해당 테마의 github source를 submodule 로 저장소에 추가하였다.
+* 참조 : https://git-scm.com/book/ko/v2/Git-%EB%8F%84%EA%B5%AC-%EC%84%9C%EB%B8%8C%EB%AA%A8%EB%93%88
 
+아래와 같은 커맨드로 submodule 로 저장소의 docs 라는 디렉토리를 jekyll의 chroot로 사용하도록 하면 끝이다.
+```sh
+$ git submodule add https://github.com/cotes2020/jekyll-theme-chirpy.git docs
+$ cat .gitmodules
+[submodule "docs"]
+	path = docs
+	url = https://github.com/cotes2020/jekyll-theme-chirpy.git
+```
+위와 같이 jekyll theme 을 가져오면 해당 디렉토리에는 ruby on rails 에서 사용할 gemfile과 기본적인 설정파일들 및 Markdown으로 작성된 문서들이 복사 된다.
 
-## Decorate Layouts
-
-Layout을 바꾸는 방법은 
+### Init Jekyll
+위 예제 처럼 docs 디렉토리에 jekyll-chirpy 테마가 설치된 스켈레톤들이 설치됐다고 가정하자.
+아래와 같이 실행하면, 해당 설정파일로 만든 Web Page 가 로컬호스트에서 동작한다.
+```sh
+$ cd docs 
+$ bundle install
+$ bundle exec jekyll serve
+Configuration file: /home/jayleekr/00_Projects/06_ADAS/docs/_config.yml
+            Source: /home/jayleekr/00_Projects/06_ADAS/docs
+       Destination: /home/jayleekr/00_Projects/06_ADAS/docs/_site
+ Incremental build: disabled. Enable with --incremental
+      Generating... 
+                    done in 0.487 seconds.
+                    Auto-regeneration may not work on some Windows versions.
+                    Please see: https://github.com/Microsoft/BashOnWindows/issues/216
+                    If it does not work, please upgrade Bash on Windows or run Jekyll with --no-watch.
+ Auto-regeneration: enabled for '/home/jayleekr/00_Projects/06_ADAS/docs'
+    Server address: http://127.0.0.1:4000/
+  Server running... press ctrl-c to stop. 
+```
