@@ -1,61 +1,19 @@
 # Yocto
+## 1. Bitbake
 
-## Related Package To Build Yocto
-
-build-essential \
-chrpath \
-diffstat \
-gawk \
-gcc-multilib \
-git \
-language-pack-en-base \
-libsdl1.2-dev \
-locales \
-socat \
-texinfo \
-unzip \
-wget \
-xterm \
-clang-format \
-clang-tidy \
-cppcheck \
-python \
-python-crypto \
-python-pip \
-python-pexpect \
-python3 \
-python3-crypto \
-python3-pip \
-python3-pexpect \
-clang \
-cmake \
-cpio \
-debianutils \
-doxygen \
-iptables \
-iputils-ping \
-libboost-all-dev \
-libdbus-glib-1-dev \
-net-tools \
-pkg-config \
-xz-utils \
-zlib1g-dev 
-
-## 2. Bitbake
-
-### 2.1 Bitbake ?
+### 1.1 Bitbake ?
 OpenEmbedded 프로젝트에서 사용하는 Build tool
 
-### 2.2 Build Sequence
+### 1.2 Build Sequence
 1. 소스코드 다운로드 및 관련 파일 다운로드 
 2. 소스코드 압축해제 및 patch 작업
 3. 설정작업(configure) 
 4. 컴파일 작업
 5. 패키징 작업
 
-### 2.3 Need to know before studying Bitbake..
+### 1.3 Need to know before studying Bitbake..
 
-#### 2.4.1 Configuration
+#### 1.4.1 Configuration
    * conf/machine
      * Machine 정보
    * conf/distro
@@ -63,7 +21,7 @@ OpenEmbedded 프로젝트에서 사용하는 Build tool
    * conf/local.conf
      * 사용자 관련 정보
 
-#### 2.4.2 Work space
+#### 1.4.2 Work space
    * poky 로 환경 설정을 하게 되면 tmp directory 안에 아래와 같은 항목들이 생성된다.
      * stamps
        * 사용자 관련 정보
@@ -82,7 +40,7 @@ OpenEmbedded 프로젝트에서 사용하는 Build tool
        * tmp/work/all-fsl-linux/packagegroup-core-ssh-openssh/1.0-r1
        * tmp/work/aarch64-fsl-linux/qemuwrapper-cross/1.0-r0
    
-#### 2.4.3 Tasks
+#### 1.4.3 Tasks
    * Bitbake에서 정의하는 빌드를 위한 과정 "task"
    * fetch
      * 필요한 소스코드를 다운로드하거나 저장소를 체크하는 작업
@@ -101,7 +59,7 @@ OpenEmbedded 프로젝트에서 사용하는 Build tool
    * pakage_write
      * 패키징 (.rmp .deb .ipk)
 
-#### 2.4.4 Single Recipe 작업하기
+#### 1.4.4 Single Recipe 작업하기
    * ex) bitbake -b bb-file -c clean
    * ex) bitbake -b bb-file -D
 
@@ -115,7 +73,7 @@ OpenEmbedded 프로젝트에서 사용하는 Build tool
      * -f
        * Force!
 
-#### 2.4.5 Recipe Basics
+#### 1.4.5 Recipe Basics
    * function
      * task의 구현체
      * ex) do_install(), do_compile()
@@ -127,7 +85,7 @@ OpenEmbedded 프로젝트에서 사용하는 Build tool
      * include or require : 다른 recipe파일을 포함
      * export : 외부로 변수값을 알림
 
-#### 2.4.6 Recipe 
+#### 1.4.6 Recipe 
    * Naming : packagename_version.bb
    * Variables
      * PR 
@@ -165,26 +123,44 @@ OpenEmbedded 프로젝트에서 사용하는 Build tool
      * FILE, FILE_DIRNAME, FILESDIR, FILESPATH
        * 발견되어진 파일들을 관리하는데 사용 된다.
      
-### 2.4 Recipe Development 과정
+### 1.4 Recipe Development 과정
 
 fetch -> unpack -> patch -> lincense -> configure -> compile -> install -> packaging -> post-installation -> runtime Testing
 
-#### 2.4.1 do_fetch
-#### 2.4.2 do_unpack
-#### 2.4.3 do_prepare_recipe_sysroot
-#### 2.4.4 do_patch
-#### 2.4.5. do_generate_toolchain_file
-#### 2.4.6. do_configure
-#### 2.4.7 do_compile
+#### 1.4.1 do_fetch
+SRC_URI 변수에 있는 파일 저장소로 부터 파일을 가지고 온다.
+SRC_URI += 같은 식으로 append하는 방식이 보편적이고,
+SRC_URI_append += 와 같이 사용하기도 한다.
+메뉴얼에서는 append를 붙여 가독성을 높이도록 가이드한다.
+
+SRC_URI 안에 컨텐츠들은 다른 변수들과 마찬가지로 seperator 로서 띄어쓰기 문자를 사용하므로,
+항상 SRC_URI에 추가시에 무조건 넣어주자.
+e.g. SRC_URI_append += " file://0001-some-patch.patch"
+
+#### 1.4.2 do_unpack
+#### 1.4.3 do_prepare_recipe_sysroot
+#### 1.4.4 do_patch
+git 이나 svn 과 같이 history 가 관리되는 source의 경우는 패치적용이 가능하다.
+*.patch 파일들이 SRC_URI에 있을시 do_patch 과정에서 patch를 적용한다.
+git 의 경우에 patch 파일을 생성하는 방법은 아래와 같다.
+``` sh
+$ cd <workdir>/build/tmp/work-shared/<target-machine>/kernel-source/init
+$ git add Kconfig # after a modification
+$ git commit -s -m "some user patch in kernel"
+$ git format-patch -1
+```
+#### 1.4.5. do_generate_toolchain_file
+#### 1.4.6. do_configure
+#### 1.4.7 do_compile
 fetch, unpack, configure 이후에 작업이 된다
 
-#### 2.4.8 do_install
+#### 1.4.8 do_install
 패키지화 되어있는 파일들을 ${D}에 복사한다
 autotool이나 cmake 툴을 이용해도 된다.
 manually configuring 하려면 "install -d" command 로 디렉토리를 만들어야한다.
 
 
-#### 2.4.7 do_deploy
+#### 1.4.9 do_deploy
 ${B} 에서 실행해야한다
 inherit deploy 로 가능
 Recipe 에서는 ${DEPLOYDIR} 에 Output을 써야한다.
@@ -192,20 +168,19 @@ sstate mechanism이 ${DEPLOYDIR} 에서 ${DEPLOY_DIR_IMAGE}에 Copy하기 때문
 ${DEPLOY_DIR_IMAGE} 에 output files 을 write한다.
 
 
-#### 2.4.8 do_build
+#### 1.4.10 do_build
 Default 명령어
 모든 작업들을 다 하는 듯 하다
 
-#### 2.4.9 do_package
+#### 1.4.10 do_package
 ${D} 에 있는 contents들을 분석하여 packages와 files들의 subsets으로 나눈다.
 이 Task는 ${PACKAGES} 와 ${FILES} 변수로 관리 되어야한다
 
-#### 2.4.10 do_package_write_tar
+#### 1.4.11 do_package_write_tar
 ${DEPLOY_DIR_TAR}에 .tar 형태로 생성한다
 
-#### 2.4.11 do_package_write_deb
+#### 1.4.12 do_package_write_deb
 ${DEPLOY_DIR_TAR}에 .deb 형태로 생성한다
 
-
-#### 2.4.13
+#### 1.4.13
 
