@@ -76,5 +76,5 @@ $ echo $IPADDR
 ```
 ## Apendix. References
 
-General : http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html
+General : [http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html](http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html)
 
