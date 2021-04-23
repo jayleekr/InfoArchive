@@ -1,7 +1,7 @@
 #!/bin/bash
 test_dir_exist(){
-    set -e 
-    if [ -e "/home/jayleekr/workspace/00_codes/05_info_archive" ];then
+    set -ex
+    if [ -e "/home/jayleekr/workspace/07_infoArchive/ComputerLanguage/Bash" ];then
         echo "DIR Exist"
         exit 1
 
